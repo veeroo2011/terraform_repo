@@ -1,0 +1,31 @@
+terraform {
+  required_providers {
+    github = {
+      source  = "integrations/github"
+      version = "5.5.0"
+    }
+  }
+}
+
+provider "github" {
+#  token = "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"
+token="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"
+}
+resource "github_repository" "github-terraform" {
+  name        = "terraform_repo"
+  description = "My custom code of terraform"
+  auto_init = true
+  visibility = "public"
+
+}
+#Below are the github repository which manage the files in Github
+resource "github_repository_file" "github-terraform" {
+  repository          = "${github_repository.github-terraform.name}"
+  file                = ".gitignore"                             # Name of the file created
+  content=file("${path.module}/github.tf")
+#content="helllo hi how are you"
+  commit_message      = "Managed by Terraform"
+  commit_author       = "Terraform Abhimanyu"
+  commit_email        = "veeroo.kumar@gmail.com"
+  overwrite_on_create = true
+}
